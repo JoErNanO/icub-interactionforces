@@ -1,0 +1,36 @@
+<application>
+<name>Fingertips Port Scope</name>
+<dependencies>
+      <port>icub14</port>
+</dependencies>
+
+
+<!-- ****************************************************************************************************************** -->
+<!-- ******************************************************************************** -->
+<!-- ** Port Scope                                                                    -->
+    <module>
+        <name>yarpscope</name>
+        <node></node>
+        <parameters>--xml FingertipsPortScopeConf-LeftHandAll.xml</parameters>
+        <workdir>/var/usr/fg/fgicub/iCub/tactileExploration/app/fingertips/portscope/</workdir>
+        <tag>Fingertips Port Scope - Left Hand All</tag>
+    </module>
+
+    <module>
+        <name>yarpscope</name>
+        <node></node>
+        <parameters>--xml FingertipsPortScopeConf-RightHandAll.xml</parameters>
+        <workdir>/var/usr/fg/fgicub/iCub/tactileExploration/app/fingertips/portscope/</workdir>
+        <tag>Fingertips Port Scope - Right Hand All</tag>
+    </module>
+
+    <module>
+        <name>yarpscope</name>
+        <node></node>
+        <parameters>--xml FingertipsPortScopeConf-FingertipsCAN.xml</parameters>
+        <workdir>/var/usr/fg/fgicub/iCub/tactileExploration/app/fingertips/portscope/</workdir>
+        <tag>Fingertips Port Scope - Fingertip</tag>
+    </module>
+<!-- ****************************************************************************************************************** -->
+
+</application>
