@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     ResourceFinder rf;
     rf.setVerbose();
     rf.setDefaultConfigFile("confFingertipsRight.ini");
-    rf.setDefaultContext("fingertips/conf");
+    rf.setDefaultContext("fingerForce");
     rf.configure("ICUB_ROOT", argc, argv);
 
     // Configure and run module
