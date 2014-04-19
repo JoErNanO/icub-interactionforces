@@ -4,7 +4,7 @@
 # 
 
 #
-# The ReachTouch module.
+# The fingerForce module.
 #
 set(MODULENAME fingerForce)
 
@@ -13,20 +13,20 @@ set(MODULENAME fingerForce)
 ###################
 set(SRC_HEADERS 
     include/FingerForceModule.h
-    include/${MODULENAME}_IDLServer.h
+    idl/include/${MODULENAME}_IDLServer.h
 )
 
 set(SRC_FILES main.cpp 
     FingerForceModule.cpp
-    ${MODULENAME}_IDLServer.cpp
+    idl/src/${MODULENAME}_IDLServer.cpp
 )
 
 # Search for thrift files
 set(IDL ${MODULENAME}.thrift)
-yarp_idl_to_dir(${IDL} ${CMAKE_CURRENT_SOURCE_DIR})
-file(GLOB TMP_GEN_IDL ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
-file(COPY ${TMP_GEN_IDL} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
-file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+yarp_idl_to_dir(${IDL} ${CMAKE_CURRENT_SOURCE_DIR}/idl)
+#file(GLOB TMP_GEN_IDL ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+#file(COPY ${TMP_GEN_IDL} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
+#file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 ###################
 
 
@@ -34,6 +34,7 @@ file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 ## The include directory 
 ###################
 include_directories(include/)
+include_directories(idl/include/)
 ###################
 
 
