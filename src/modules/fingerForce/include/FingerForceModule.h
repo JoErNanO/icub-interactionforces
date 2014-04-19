@@ -124,6 +124,9 @@ namespace iCub {
                 std::string robotName;
                 std::string whichArm;
 
+                /** Robot position prior to running module. */
+                yarp::sig::Vector startPos;
+
                 /** Module closing flag used by RPC::quit(). */
                 bool closing;
 
@@ -182,7 +185,7 @@ namespace iCub {
                 /* ****** Position Controller                           ****** */
                 yarp::dev::PolyDriver clientPos;
                 yarp::dev::IPositionControl *iPos;
-                yarp::dev::IEncoders *iEnc;
+                yarp::dev::IEncoders *iEncs;
                 
                 /* ****** Debug Attributes                           ****** */
                 std::string dbgTag;
@@ -204,9 +207,6 @@ namespace iCub {
                 bool reachArm(void);
                 bool waitMoveDone(const double &i_timeout, const double &i_delay);
                 
-                bool executeTapping(yarp::os::Bottle &i_reply, yarp::sig::Vector &i_position, const double &i_joint);
-                bool executeTappingSequence(yarp::os::Bottle &i_reply, std::string i_tapping);
-
                 bool connectDataDumper(void);
                 bool disconnectDataDumper(void);
 
@@ -214,6 +214,7 @@ namespace iCub {
                 virtual bool open(void);
                 virtual bool pinch(void);
                 virtual bool pinchseq(void);
+                virtual bool resetC(void);
                 virtual bool quit(void);
 
         };

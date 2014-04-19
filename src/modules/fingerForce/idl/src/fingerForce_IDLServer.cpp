@@ -66,6 +66,26 @@ public:
   }
 };
 
+class fingerForce_IDLServer_resetC : public yarp::os::Portable {
+public:
+  bool _return;
+  virtual bool write(yarp::os::ConnectionWriter& connection) {
+    yarp::os::idl::WireWriter writer(connection);
+    if (!writer.writeListHeader(1)) return false;
+    if (!writer.writeTag("resetC",1,1)) return false;
+    return true;
+  }
+  virtual bool read(yarp::os::ConnectionReader& connection) {
+    yarp::os::idl::WireReader reader(connection);
+    if (!reader.readListReturn()) return false;
+    if (!reader.readBool(_return)) {
+      reader.fail();
+      return false;
+    }
+    return true;
+  }
+};
+
 class fingerForce_IDLServer_quit : public yarp::os::Portable {
 public:
   bool _return;
@@ -113,6 +133,15 @@ bool fingerForce_IDLServer::pinchseq() {
   bool ok = yarp().write(helper,helper);
   return ok?helper._return:_return;
 }
+bool fingerForce_IDLServer::resetC() {
+  bool _return = false;
+  fingerForce_IDLServer_resetC helper;
+  if (!yarp().canWrite()) {
+    fprintf(stderr,"Missing server method '%s'?\n","bool fingerForce_IDLServer::resetC()");
+  }
+  bool ok = yarp().write(helper,helper);
+  return ok?helper._return:_return;
+}
 bool fingerForce_IDLServer::quit() {
   bool _return = false;
   fingerForce_IDLServer_quit helper;
@@ -155,6 +184,17 @@ bool fingerForce_IDLServer::read(yarp::os::ConnectionReader& connection) {
     if (tag == "pinchseq") {
       bool _return;
       _return = pinchseq();
+      yarp::os::idl::WireWriter writer(reader);
+      if (!writer.isNull()) {
+        if (!writer.writeListHeader(1)) return false;
+        if (!writer.writeBool(_return)) return false;
+      }
+      reader.accept();
+      return true;
+    }
+    if (tag == "resetC") {
+      bool _return;
+      _return = resetC();
       yarp::os::idl::WireWriter writer(reader);
       if (!writer.isNull()) {
         if (!writer.writeListHeader(1)) return false;
@@ -211,6 +251,7 @@ std::vector<std::string> fingerForce_IDLServer::help(const std::string& function
     helpString.push_back("open");
     helpString.push_back("pinch");
     helpString.push_back("pinchseq");
+    helpString.push_back("resetC");
     helpString.push_back("quit");
     helpString.push_back("help");
   }
@@ -224,17 +265,22 @@ std::vector<std::string> fingerForce_IDLServer::help(const std::string& function
       helpString.push_back("bool pinch() ");
       helpString.push_back("Grasp an object using a pinch grasp. ");
       helpString.push_back("The grasping movement is controlled in position mode. ");
-      helpString.push_back("@return true/false on success/failure. ");
+      helpString.push_back("@return true/false on success/failure ");
     }
     if (functionName=="pinchseq") {
       helpString.push_back("bool pinchseq() ");
       helpString.push_back("Perform a sequence of pinch grasps. ");
-      helpString.push_back("@return true/false on success/failure. ");
+      helpString.push_back("@return true/false on success/failure ");
+    }
+    if (functionName=="resetC") {
+      helpString.push_back("bool resetC() ");
+      helpString.push_back("Reset the pinch counter. ");
+      helpString.push_back("@return true/false on success/failure ");
     }
     if (functionName=="quit") {
       helpString.push_back("bool quit() ");
       helpString.push_back("Quit the module. ");
-      helpString.push_back("@return true/false on success/failure. ");
+      helpString.push_back("@return true/false on success/failure ");
     }
     if (functionName=="help") {
       helpString.push_back("std::vector<std::string> help(const std::string& functionName=\"--all\")");

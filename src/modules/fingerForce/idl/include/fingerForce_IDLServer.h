@@ -25,17 +25,22 @@ public:
 /**
  * Grasp an object using a pinch grasp.
  * The grasping movement is controlled in position mode.
- * @return true/false on success/failure.
+ * @return true/false on success/failure
  */
   virtual bool pinch();
 /**
  * Perform a sequence of pinch grasps.
- * @return true/false on success/failure.
+ * @return true/false on success/failure
  */
   virtual bool pinchseq();
 /**
+ * Reset the pinch counter.
+ * @return true/false on success/failure
+ */
+  virtual bool resetC();
+/**
  * Quit the module.
- * @return true/false on success/failure.
+ * @return true/false on success/failure
  */
   virtual bool quit();
   virtual bool read(yarp::os::ConnectionReader& connection);

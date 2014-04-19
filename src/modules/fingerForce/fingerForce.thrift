@@ -17,19 +17,25 @@ service fingerForce_IDLServer
     /**
      * Grasp an object using a pinch grasp.
      * The grasping movement is controlled in position mode.
-     * @return true/false on success/failure.
+     * @return true/false on success/failure
      */
     bool pinch();
 
     /**
      * Perform a sequence of pinch grasps.
-     * @return true/false on success/failure.
+     * @return true/false on success/failure
      */
     bool pinchseq();
 
     /**
+     * Reset the pinch counter.
+     * @return true/false on success/failure
+     */
+    bool resetC();
+    
+    /**
      * Quit the module.
-     * @return true/false on success/failure.
+     * @return true/false on success/failure
      */
     bool quit();
 }

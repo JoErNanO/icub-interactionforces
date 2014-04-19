@@ -44,6 +44,9 @@ using yarp::os::Value;
 using yarp::os::Bottle;
 using yarp::sig::Vector;
 
+
+#define FINGERFORCE_DEBUG 1
+
 /* *********************************************************************************************************************** */
 /* ******* Constructor                                                      ********************************************** */   
 FingerForceModule::FingerForceModule() 
@@ -51,6 +54,9 @@ FingerForceModule::FingerForceModule()
     dbgTag = "FingerForceModule: ";
 
     closing = false;
+    
+    // Experiment parameters
+    pinchCounter = 0;
 }
 /* *********************************************************************************************************************** */
 
@@ -75,7 +81,10 @@ bool FingerForceModule::updateModule() { return true; }
 
 /* *********************************************************************************************************************** */
 /* ******* Configure module                                                 ********************************************** */   
-bool FingerForceModule::configure(ResourceFinder &rf){
+bool FingerForceModule::configure(ResourceFinder &rf) {
+    using std::vector;
+    using yarp::os::Time;
+
     cout << dbgTag << "Starting. \n";
 
     /* ****** Configure the Module                            ****** */
@@ -126,6 +135,7 @@ bool FingerForceModule::configure(ResourceFinder &rf){
         finger.startPos = 0;
         finger.pinchPos = 20;
     }
+    previousDepth = finger.startPos;
 
 #ifndef NODEBUG
     cout << "DEBUG: " << dbgTag << "Pinching parameters are: \n";
@@ -156,15 +166,34 @@ bool FingerForceModule::configure(ResourceFinder &rf){
     if (iPos == 0) {
         return false;
     }
-    clientPos.view(iEnc);
-    if (iEnc == 0) {
+    clientPos.view(iEncs);
+    if (iEncs == 0) {
         return false;
     }
     int jnts = 0;
     iPos->getAxes(&jnts);
+    // Set reference accelerations
     std::vector<double> refAccels(jnts, 10e6);
     iPos->setRefAccelerations(&refAccels[0]);
+    // Set reference speeds
+    std::vector<double> refSpeeds(jnts, 0);
+    iPos->getRefSpeeds(&refSpeeds[0]);
+    for (int i = 11; i < 15; ++i) {
+        refSpeeds[i] = 50;
+    }
+    iPos->setRefSpeeds(&refSpeeds[0]);
 
+    
+    /* ******* Store position prior to acquiring control.           ******* */
+    startPos.resize(jnts);
+    bool ok = false;
+    while(!ok) {
+        ok = iEncs->getEncoders(startPos.data());
+#ifndef NODEBUG
+        cout << "DEBUG: " << dbgTag << "Encoder data is not available yet. \n";
+#endif
+        Time::delay(0.1);
+    }
 
     // Put arm in position
     reachArm();
@@ -188,6 +217,13 @@ bool FingerForceModule::close() {
     skinManagerHandL.close();
     skinManagerHandR.close();
     RPCFingertipsCmd.close();
+
+    // Restore initial robot position
+    if (iPos) {
+        iPos->stop();
+        // Restore initial robot position
+        iPos->positionMove(startPos.data());
+    }
 
     // Cartesian controller
     clientPos.close();
@@ -251,7 +287,7 @@ bool FingerForceModule::open(void) {
     int joints;
     iPos->getAxes(&joints);
     Vector position(joints);
-    iEnc->getEncoders(position.data());
+    iEncs->getEncoders(position.data());
 
 #ifndef NODEBUG
     cout << "DEBUG: " << dbgTag << "Hand joint position is: \t";
@@ -280,7 +316,7 @@ bool FingerForceModule::open(void) {
     waitMoveDone(10, 1);
 
 #ifndef NODEBUG
-    iEnc->getEncoders(position.data());
+    iEncs->getEncoders(position.data());
     cout << "DEBUG: " << dbgTag << "Hand joint position reached: \t";
     for (size_t i = 0; i < position.size(); ++i) {
         cout << position[i] << " ";
@@ -302,20 +338,26 @@ bool FingerForceModule::pinch(void) {
     int njoints;
     iPos->getAxes(&njoints);
     Vector position(njoints);
-    iEnc->getEncoders(position.data());
+    iEncs->getEncoders(position.data());
+
+#if !defined(NODEBUG) || (FINGER_FORCE_DEBUG)
+    cout << "DEBUG: " << dbgTag << "Starting limb position: " << position[finger.joint] << ", "
+        << "Previous depth: " << previousDepth << "\n";
+#endif
 
     // Check for progressive pinching depth
     if (progressiveDepth) {
-        if (pinchCounter == 0) {
-            previousDepth = position[finger.joint];        // Store previous depth
-        } else if ((pinchCounter > 0) && (pinchCounter < nPinches/2)) {
+#if !defined(NODEBUG) || (FINGER_FORCE_DEBUG)
+        cout << "DEBUG: " << dbgTag << "Performing pinch number: " << pinchCounter << "\n";
+#endif
+        if ((pinchCounter >= 0) && (pinchCounter < nPinches/2)) {
             // First half of pinching sequence 
             position[finger.joint] = previousDepth + pinchIncrement;      // Increment depth wrt previous depth
             previousDepth = position[finger.joint];        // Store previous depth
         } else if (pinchCounter == nPinches/2) {
             // Midpoint of sequence
             position[finger.joint] = previousDepth;
-        } else if ((pinchCounter >= nPinches/2) && (pinchCounter < nPinches-1)) {
+        } else if ((pinchCounter >= nPinches/2) && (pinchCounter < nPinches)) {
             // Second half of pinching sequence
             position[finger.joint] = previousDepth - pinchIncrement;      // Decrement depth wrt previous depth
             previousDepth = position[finger.joint];        // Store previous depth
@@ -324,8 +366,11 @@ bool FingerForceModule::pinch(void) {
         pinchCounter++;       // Increment pinchcounter
     } else {
         position[finger.joint] = finger.startPos + pinchIncrement;      // Increment depth wrt previous depth
+        cout << dbgTag << "La madonna lesbica. \n";
     }
     
+    cout << dbgTag << "Pinching depth is: " << position[finger.joint] << "\n";
+
     // Move
     cout << dbgTag << "Pinching ...... ";
     iPos->positionMove(position.data());
@@ -335,7 +380,7 @@ bool FingerForceModule::pinch(void) {
     // 1s pinch
     Time::delay(pinchDuration);
 
-    iEnc->getEncoders(position.data());
+    iEncs->getEncoders(position.data());
     cout << "Limb position reached: " << position[finger.joint] << "\n";
     
     
@@ -348,7 +393,7 @@ bool FingerForceModule::pinch(void) {
     // Check motion done
     waitMoveDone(10, 1);
 
-    iEnc->getEncoders(position.data());
+    iEncs->getEncoders(position.data());
     cout << "Limb position reached: " << position[finger.joint] << "\n";
    
     return true;
@@ -380,6 +425,17 @@ bool FingerForceModule::pinchseq() {
 
     disconnectDataDumper();
 
+    return true;
+}
+/* *********************************************************************************************************************** */
+
+
+/* *********************************************************************************************************************** */
+/* ******* Reset the pinch counter.                                         ********************************************** */
+bool FingerForceModule::resetC(void) {
+    cout << dbgTag << "Resetting the pinch counter. \n";
+    pinchCounter = 0;
+    
     return true;
 }
 /* *********************************************************************************************************************** */
