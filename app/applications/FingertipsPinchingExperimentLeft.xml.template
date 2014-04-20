@@ -6,28 +6,56 @@
 <!-- ******************************************************************************** -->
 <!-- ** Modules                                                                       -->
     <module>
-        <name>Fingertips</name>
-        <node>icub14</node>
+        <name>fingerForce</name>
+        <node></node>
         <parameters>--from confFingertipsLeft.ini</parameters>
         <workdir>/var/usr/fg/fgicub/iCub/tactileExploration/app/fingertips/</workdir>
         <tag>Fingertips module</tag>
     </module>
     
     <module>
-        <name>ReachTouch</name>
-        <node>icub14</node>
-        <parameters>--from confReachTouchLeft.ini</parameters>
-        <workdir>/var/usr/fg/fgicub/iCub/tactileExploration/app/reachtouch/</workdir>
-        <tag>ReachTouch module</tag>
-    </module>
-    
-    <module>
         <name>NIDAQmxReader</name>
-        <node>cubeOSS</node>
+        <node></node>
         <parameters>--from confNIDAQmxReader.ini</parameters>
         <workdir></workdir>
         <tag>NIDAQmxReader module</tag>
     </module>
+<!-- ******************************************************************************** -->
+    
+<!-- ******************************************************************************** -->
+<!-- ** Data Dumpers                                                                  -->
+    <module>
+        <name>dataDumper</name>
+        <node></node>
+        <parameters>--name /dump_left_pos --dir data/left/pos/ --rxTime</parameters>
+        <workdir>/var/usr/fg/fgicub/iCub/tactileExploration/datadumper/</workdir>
+        <tag>datadumper Finger Pos</tag>
+    </module>
+
+    <module>
+        <name>dataDumper</name>
+        <node></node>
+        <parameters>--name /dump_left_skin_raw --dir data/left/skin/raw/ --rxTime</parameters>
+        <workdir>/var/usr/fg/fgicub/iCub/tactileExploration/datadumper/</workdir>
+        <tag>datadumper Skin values raw</tag>
+    </module>   
+    
+    <module>
+        <name>dataDumper</name>
+        <node></node>
+        <parameters>--name /dump_left_skin_comp --dir data/left/skin/comp/ --rxTime</parameters>
+        <workdir>/var/usr/fg/fgicub/iCub/tactileExploration/datadumper/</workdir>
+        <tag>datadumper Skin values compensated</tag>
+    </module>   
+    
+    <module>
+        <name>dataDumper</name>
+        <node></node>
+        <parameters>--name /dump_left_nano17 --dir data/left/nano17/ --rxTime</parameters>
+        <workdir>/var/usr/fg/fgicub/iCub/tactileExploration/datadumper/</workdir>
+        <tag>datadumper nano17 FT values</tag>
+    </module>
+<!-- ******************************************************************************** -->    
 <!-- ****************************************************************************************************************** -->
     
     
@@ -35,9 +63,28 @@
 <!-- ******************************************************************************** -->
 <!-- ** Connections                                                                   -->
     <connection>
-        <from>/fingertips/reachTouch/rpc:o</from>
-        <to>/reachTouch/cmd:io</to>
-        <protocol>tcp</protocol>
+        <from>/icub/left_arm/state:o</from>
+        <to>/dump_left_pos</to>
+        <protocol>udp</protocol>
     </connection>
+
+    <connection>
+        <from>/icub/skin/left_hand</from>
+        <to>/dump_left_skin_raw</to>
+        <protocol>udp</protocol>
+    </connection>
+
+    <connection>
+        <from>/icub/skin/left_hand_comp</from>
+        <to>/dump_left_skin_comp</to>
+        <protocol>udp</protocol>
+    </connection>
+
+    <connection>
+        <from>/NIDAQmxReader/data/real:o</from>
+        <to>/dump_left_nano17</to>
+        <protocol>udp</protocol>
+    </connection>
+<!-- ******************************************************************************** -->
 <!-- ****************************************************************************************************************** -->
 </application>
