@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<portscope rows="6" columns="10" carrier="mcast">
+<!-- <portscope rows="6" columns="10" carrier="mcast"> -->
+<portscope rows="6" columns="6" carrier="mcast">
 <!-- ****************************************************************************************************************** -->
 <!-- ******************************************************************************** -->
 <!-- ** Skin Values                                                                   -->
 <!-- ** Left Hand                                                                    -->
     <!-- Raw values-->
     <plot gridx="0" gridy="0" hspan="2" vspan="2"
+          title="Left Hand Raw - Thumb"
+          size="60" minval="-1" maxval="256"
+          bgcolor="LightSlateGrey">
+        <graph remote="/icub/skin/left_hand" index="48"
+               color="#0000FF" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand" index="49"
+               color="#FF0000" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand" index="50"
+               color="#FF6E00" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand" index="51"
+               color="#FFD800" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand" index="52"
+               color="#6EF400" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand" index="53"
+               color="#0E8C00" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand" index="54"
+               color="#6B0089" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand" index="55"
+               color="#00DCF4" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand" index="56"
+               color="#184672" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand" index="57"
+               color="#90E5FF" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand" index="58"
+               color="#A0E5FF" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand" index="59"
+               color="#FFFFFF" title="Raw values" size="2" type="lines" />
+    </plot>
+
+    <plot gridx="2" gridy="0" hspan="2" vspan="2"
           title="Left Hand Raw - Index"
           size="60" minval="-1" maxval="256"
           bgcolor="LightSlateGrey">
@@ -35,7 +66,7 @@
                color="#FFFFFF" title="Raw values" size="2" type="lines" />
     </plot>
 
-    <plot gridx="2" gridy="0" hspan="2" vspan="2"
+    <plot gridx="4" gridy="0" hspan="2" vspan="2"
           title="Left Hand Raw - Middle"
           size="60" minval="-1" maxval="256"
           bgcolor="LightSlateGrey">
@@ -65,7 +96,8 @@
                color="#FFFFFF" title="Raw values" size="2" type="lines" />
     </plot>
 
-    <plot gridx="4" gridy="0" hspan="2" vspan="2"
+<!--
+    <plot gridx="6" gridy="0" hspan="2" vspan="2"
           title="Left Hand Raw - Ring"
           size="60" minval="-1" maxval="256"
           bgcolor="LightSlateGrey">
@@ -95,7 +127,7 @@
                color="#FFFFFF" title="Raw values" size="2" type="lines" />
     </plot>
 
-    <plot gridx="6" gridy="0" hspan="2" vspan="2"
+    <plot gridx="8" gridy="0" hspan="2" vspan="2"
           title="Left Hand Raw - Little"
           size="60" minval="-1" maxval="256"
           bgcolor="LightSlateGrey">
@@ -124,39 +156,41 @@
         <graph remote="/icub/skin/left_hand" index="47"
                color="#FFFFFF" title="Raw values" size="2" type="lines" />
     </plot>
-
-    <plot gridx="8" gridy="0" hspan="2" vspan="2"
-          title="Left Hand Raw - Thumb"
-          size="60" minval="-1" maxval="256"
-          bgcolor="LightSlateGrey">
-        <graph remote="/icub/skin/left_hand" index="48"
-               color="#0000FF" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand" index="49"
-               color="#FF0000" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand" index="50"
-               color="#FF6E00" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand" index="51"
-               color="#FFD800" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand" index="52"
-               color="#6EF400" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand" index="53"
-               color="#0E8C00" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand" index="54"
-               color="#6B0089" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand" index="55"
-               color="#00DCF4" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand" index="56"
-               color="#184672" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand" index="57"
-               color="#90E5FF" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand" index="58"
-               color="#A0E5FF" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand" index="59"
-               color="#FFFFFF" title="Raw values" size="2" type="lines" />
-    </plot>
+-->
     
     <!-- Compensated values-->
+<!--    
     <plot gridx="0" gridy="2" hspan="2" vspan="2"
+          title="Left Hand Comp - Thumb"
+          size="60" minval="-1" maxval="256"
+          bgcolor="LightSlateGrey">
+        <graph remote="/icub/skin/left_hand_comp" index="48"
+               color="#0000FF" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand_comp" index="49"
+               color="#FF0000" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand_comp" index="50"
+               color="#FF6E00" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand_comp" index="51"
+               color="#FFD800" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand_comp" index="52"
+               color="#6EF400" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand_comp" index="53"
+               color="#0E8C00" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand_comp" index="54"
+               color="#6B0089" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand_comp" index="55"
+               color="#00DCF4" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand_comp" index="56"
+               color="#184672" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand_comp" index="57"
+               color="#90E5FF" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand_comp" index="58"
+               color="#A0E5FF" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/skin/left_hand_comp" index="59"
+               color="#FFFFFF" title="Raw values" size="2" type="lines" />
+    </plot>
+
+    <plot gridx="2" gridy="2" hspan="2" vspan="2"
           title="Left Hand Comp - Index"
           size="60" minval="-1" maxval="256"
           bgcolor="LightSlateGrey">
@@ -186,7 +220,7 @@
                color="#FFFFFF" title="Raw values" size="2" type="lines" />
     </plot>
 
-    <plot gridx="2" gridy="2" hspan="2" vspan="2"
+    <plot gridx="4" gridy="2" hspan="2" vspan="2"
           title="Left Hand Comp - Middle"
           size="60" minval="-1" maxval="256"
           bgcolor="LightSlateGrey">
@@ -216,7 +250,7 @@
                color="#FFFFFF" title="Raw values" size="2" type="lines" />
     </plot>
 
-    <plot gridx="4" gridy="2" hspan="2" vspan="2"
+    <plot gridx="6" gridy="2" hspan="2" vspan="2"
           title="Left Hand Comp - Ring"
           size="60" minval="-1" maxval="256"
           bgcolor="LightSlateGrey">
@@ -246,7 +280,7 @@
                color="#FFFFFF" title="Raw values" size="2" type="lines" />
     </plot>
 
-    <plot gridx="6" gridy="2" hspan="2" vspan="2"
+    <plot gridx="8" gridy="2" hspan="2" vspan="2"
           title="Left Hand Comp - Little"
           size="60" minval="-1" maxval="256"
           bgcolor="LightSlateGrey">
@@ -275,63 +309,81 @@
         <graph remote="/icub/skin/left_hand_comp" index="47"
                color="#FFFFFF" title="Raw values" size="2" type="lines" />
     </plot>
-
-    <plot gridx="8" gridy="2" hspan="2" vspan="2"
-          title="Left Hand Comp - Thumb"
-          size="60" minval="-1" maxval="256"
-          bgcolor="LightSlateGrey">
-        <graph remote="/icub/skin/left_hand_comp" index="48"
-               color="#0000FF" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand_comp" index="49"
-               color="#FF0000" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand_comp" index="50"
-               color="#FF6E00" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand_comp" index="51"
-               color="#FFD800" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand_comp" index="52"
-               color="#6EF400" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand_comp" index="53"
-               color="#0E8C00" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand_comp" index="54"
-               color="#6B0089" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand_comp" index="55"
-               color="#00DCF4" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand_comp" index="56"
-               color="#184672" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand_comp" index="57"
-               color="#90E5FF" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand_comp" index="58"
-               color="#A0E5FF" title="Raw values" size="2" type="lines" />
-        <graph remote="/icub/skin/left_hand_comp" index="59"
-               color="#FFFFFF" title="Raw values" size="2" type="lines" />
-    </plot>
+-->
 <!-- ******************************************************************************** -->
+
+
+<!-- ******************************************************************************** -->
+<!-- ** Position Values                                                               -->
+    <plot gridx="0" gridy="2" hspan="2" vspan="2"
+          title="Joint Positions - Thumb"
+          size="60" minval="0" maxval="90"
+          bgcolor="LightSlateGrey">
+        <graph remote="/icub/left_arm/state:o" index="8"
+               color="#0000FF" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/left_arm/state:o" index="9"
+               color="#FF6E00" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/left_arm/state:o" index="10"
+               color="#FF0000" title="Raw values" size="2" type="lines" />
+    </plot>
+
+    <plot gridx="2" gridy="2" hspan="2" vspan="2"
+          title="Joint Positions - Index"
+          size="60" minval="0" maxval="90"
+          bgcolor="LightSlateGrey">
+        <graph remote="/icub/left_arm/state:o" index="11"
+               color="#0000FF" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/left_arm/state:o" index="12"
+               color="#FF6E00" title="Raw values" size="2" type="lines" />
+    </plot>
+
+    <plot gridx="4" gridy="2" hspan="2" vspan="2"
+          title="Joint Positions - Middle"
+          size="60" minval="0" maxval="90"
+          bgcolor="LightSlateGrey">
+        <graph remote="/icub/left_arm/state:o" index="13"
+               color="#0000FF" title="Raw values" size="2" type="lines" />
+        <graph remote="/icub/left_arm/state:o" index="14"
+               color="#FF6E00" title="Raw values" size="2" type="lines" />
+    </plot>
+
+<!--
+    <plot gridx="6" gridy="2" hspan="4" vspan="2"
+          title="Joint Positions - Ring+Little"
+          size="60" minval="0" maxval="240"
+          bgcolor="LightSlateGrey">
+        <graph remote="/icub/left_arm/state:o" index="15"
+               color="#0000FF" title="Raw values" size="2" type="lines" />
+    </plot>
+-->
+<!-- ******************************************************************************** -->
+
 
 <!-- ******************************************************************************** -->
 <!-- ** Nano17 Values                                                                 -->
 <!-- ** Force		                                                              -->
-    <plot gridx="0" gridy="4" hspan="6" vspan="2"
+    <plot gridx="0" gridy="4" hspan="4" vspan="2"
           title="Nano17 - Force (X, Y, Z)"
-          size="60" minval="-70" maxval="70"
+          size="60" minval="-10" maxval="2"
           bgcolor="LightSlateGrey">
         <graph remote="/NIDAQmxReader/data/real:o" index="0"
                color="#0000FF" title="Raw values" size="2" type="lines" />
         <graph remote="/NIDAQmxReader/data/real:o" index="1"
-               color="#FF0000" title="Raw values" size="2" type="lines" />
-        <graph remote="/NIDAQmxReader/data/real:o" index="2"
                color="#FF6E00" title="Raw values" size="2" type="lines" />
+        <graph remote="/NIDAQmxReader/data/real:o" index="2"
+               color="#FF0000" title="Raw values" size="2" type="lines" />
     </plot>
 
-    <plot gridx="6" gridy="4" hspan="4" vspan="2"
+    <plot gridx="4" gridy="4" hspan="2" vspan="2"
           title="Nano17 - Torque (X, Y, Z)"
           size="60" minval="-250" maxval="250"
           bgcolor="LightSlateGrey">
         <graph remote="/NIDAQmxReader/data/real:o" index="3"
                color="#0000FF" title="Raw values" size="2" type="lines" />
         <graph remote="/NIDAQmxReader/data/real:o" index="4"
-               color="#FF0000" title="Raw values" size="2" type="lines" />
-        <graph remote="/NIDAQmxReader/data/real:o" index="5"
                color="#FF6E00" title="Raw values" size="2" type="lines" />
+        <graph remote="/NIDAQmxReader/data/real:o" index="5"
+               color="#FF0000" title="Raw values" size="2" type="lines" />
     </plot>
 <!-- ******************************************************************************** -->
 <!-- ****************************************************************************************************************** -->
