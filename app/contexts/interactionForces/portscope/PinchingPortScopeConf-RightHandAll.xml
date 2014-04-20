@@ -324,7 +324,7 @@
 
     <plot gridx="6" gridy="4" hspan="4" vspan="2"
           title="Nano17 - Torque (X, Y, Z)"
-          size="60" minval="-70" maxval="70"
+          size="60" minval="-250" maxval="250"
           bgcolor="LightSlateGrey">
         <graph remote="/NIDAQmxReader/data/real:o" index="3"
                color="#0000FF" title="Raw values" size="2" type="lines" />
