@@ -12,13 +12,15 @@ set(MODULENAME fingerForce)
 ## The included source code
 ###################
 set(SRC_HEADERS 
-    include/FingerForceModule.h
     idl/include/${MODULENAME}_IDLServer.h
+	include/FingerForceModule.h
+    include/GazeThread.h
 )
 
 set(SRC_FILES main.cpp 
-    FingerForceModule.cpp
     idl/src/${MODULENAME}_IDLServer.cpp
+    FingerForceModule.cpp
+    GazeThread.cpp
 )
 
 # Search for thrift files

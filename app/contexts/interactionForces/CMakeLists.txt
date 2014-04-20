@@ -3,5 +3,9 @@
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 # 
 
-subdirs(datadumper)
-subdirs(portscope)
+
+set(CONTEXTNAME interactionForces)
+
+# Search for xml files
+file(GLOB APP_CONF ${CMAKE_CURRENT_SOURCE_DIR}/portscope/*.xml)
+yarp_install(FILES ${APP_CONF} DESTINATION ${ICUBCONTRIB_CONTEXTS_INSTALL_DIR}/${CONTEXTNAME})

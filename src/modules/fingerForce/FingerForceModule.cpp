@@ -36,6 +36,7 @@ using iCub::interactionForces::FingerForceModule;
 using std::stringstream;
 using std::string;
 using std::cout;
+using std::cerr;
 
 using yarp::os::Network;
 using yarp::os::Property;
@@ -96,8 +97,58 @@ bool FingerForceModule::configure(ResourceFinder &rf) {
     whichArm = rf.check("whichArm", Value("right"), "The arm to use.").asString().c_str();
     string portNameRoot = "/" + moduleName + "/";
 
+    // Robot home position
+    Bottle parGroup = rf.findGroup("home");
+    homePos.resize(16, 0.0);
+    if (!parGroup.isNull()) {
+        // Arm position
+        Bottle *armPos = parGroup.find("arm").asList();
+        if (armPos != NULL) {
+            if (armPos->size() == 7) {
+                for (int i = 0; i < armPos->size(); ++i) {
+                    homePos[i] = armPos->get(i).asDouble();
+                }
+            } else {
+                cerr << dbgTag << "Invalid arm position parameter size. Expecting a list of size 7. \n";
+                return false;
+            }
+        } else {
+            cerr << dbgTag << "Cannot find arm home position (arm) in parameter group [home] in the specified configuration file. \n";
+            return false;
+        }
+
+        // Hand position
+        Bottle *handPos = parGroup.find("hand").asList();
+        if (handPos != NULL) {
+            if (handPos->size() == 9) {
+                for (int i = 0; i < handPos->size(); ++i) {
+                    homePos[i + 7] = handPos->get(i).asDouble();
+                }
+            } else {
+                cerr << dbgTag << "Invalid hand position parameter size. Expecting a list of size 9. \n";
+                return false;
+            }
+        } else {
+            cerr << dbgTag << "Cannot find hand home position (hand) in parameter group [home] in the specified configuration file. \n";
+            return false;
+        }
+    } else {
+        cerr << dbgTag << "Cannot find robot home position parameter group [home] in the specified configuration file. \n";
+        return false;
+    }
+
+#ifndef NODEBUG
+    cout << "\n";
+    cout << "DEBUG: " << dbgTag << "Experiment home position for the arm is: ";
+    for (size_t i = 0; i < homePos.size(); ++i) {
+        cout << homePos[i] << " ";
+    }
+    cout << "\n";
+#endif
+
+
     // Experiment configuration
-    Bottle parGroup = rf.findGroup("experiment");
+    parGroup = rf.findGroup("experiment");
     if (!parGroup.isNull()) {
         nPinches = parGroup.check("nPinches", 10, "Number of pinchings per sequence.").asInt();
         pinchIncrement = parGroup.check("pinchIncrement", 1, "Position increment for each pinch.").asInt();
@@ -199,6 +250,15 @@ bool FingerForceModule::configure(ResourceFinder &rf) {
     reachArm();
     // Hand
     open();
+
+
+    /* ******* Start threads.                                       ******* */
+    // Gaze thread
+    thGaze = new GazeThread(100, rf);
+    if (!thGaze->start()) {
+        cout << dbgTag << "Could not start the gaze thread. \n";
+        return false;
+    }
     
     cout << dbgTag << "Started correctly. \n";
 
@@ -218,6 +278,9 @@ bool FingerForceModule::close() {
     skinManagerHandR.close();
     RPCFingertipsCmd.close();
 
+    // Stop threads
+    thGaze->stop();
+    
     // Restore initial robot position
     if (iPos) {
         iPos->stop();
@@ -262,13 +325,7 @@ bool FingerForceModule::reachArm(void) {
 
     // Set the arm in the starting position
     // Arm
-    iPos->positionMove(0 ,-25);
-    iPos->positionMove(1 , 35);
-    iPos->positionMove(2 , 18);
-    iPos->positionMove(3 , 65);
-    iPos->positionMove(4 ,-32);
-    iPos->positionMove(5 , 9);
-    iPos->positionMove(6 , -5);
+    iPos->positionMove(&homePos[0]);
 
     // Check motion done
     waitMoveDone(10, 1);
@@ -297,20 +354,14 @@ bool FingerForceModule::open(void) {
     cout << "\n";
 #endif
 
-    // Close hand
-    position[7] = 20; 
-    position[8] = 75;
-    position[9] = 40;
-    position[10] = 0;
-    for (int i = 11; i < 15; ++i) {
-        if (i == finger.joint) {
+    // Open hand
+    for (size_t i = 7; i < homePos.size(); ++i) {
+        if ((int) i == finger.joint) {
             position[i] = finger.startPos;
         } else {
-            position[i] = 0;
+            position[i] = homePos[i];
         }
-    } 
-    position[15] = 0;
-
+    }
     iPos->positionMove(position.data());
     // Check motion done
     waitMoveDone(10, 1);
@@ -366,24 +417,21 @@ bool FingerForceModule::pinch(void) {
         pinchCounter++;       // Increment pinchcounter
     } else {
         position[finger.joint] = finger.startPos + pinchIncrement;      // Increment depth wrt previous depth
-        cout << dbgTag << "La madonna lesbica. \n";
     }
     
     cout << dbgTag << "Pinching depth is: " << position[finger.joint] << "\n";
 
-    // Move
+    // Pinch
     cout << dbgTag << "Pinching ...... ";
     iPos->positionMove(position.data());
     // Check motion done
     waitMoveDone(10, 1);
-  
-    // 1s pinch
-    Time::delay(pinchDuration);
-
     iEncs->getEncoders(position.data());
     cout << "Limb position reached: " << position[finger.joint] << "\n";
     
-    
+    // dt pinch
+    Time::delay(pinchDuration);
+
     // Raise -- move back to pre-pinching position
     cout << dbgTag << "Raising ...... ";
     position[finger.joint] = finger.startPos;       // Move finger finger
@@ -421,7 +469,7 @@ bool FingerForceModule::pinchseq() {
         Time::delay(pinchDelay);
     }
 
-    cout << dbgTag << "Done. \n";
+    cout << dbgTag << "Pinching sequence complete. \n";
 
     disconnectDataDumper();
 

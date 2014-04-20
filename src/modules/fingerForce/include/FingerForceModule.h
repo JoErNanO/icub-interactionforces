@@ -74,6 +74,7 @@ This file can be edited at .... .
 #define __FINGERFORCE_MODULE_H__
 
 #include "fingerForce_IDLServer.h"
+#include "GazeThread.h"
 
 #include <yarp/os/RFModule.h>
 #include <yarp/sig/Vector.h>
@@ -127,6 +128,9 @@ namespace iCub {
                 /** Robot position prior to running module. */
                 yarp::sig::Vector startPos;
 
+                /** Robot position to be reached when module starts. */
+                std::vector<double> homePos;
+
                 /** Module closing flag used by RPC::quit(). */
                 bool closing;
 
@@ -173,6 +177,10 @@ namespace iCub {
                 double previousDepth;
 
 
+                /* *******  Threads                                 ******* */
+                iCub::interactionForces::GazeThread *thGaze;
+
+                
                 /* ****** Ports                                      ****** */
                 yarp::os::RpcServer RPCFingertipsCmd;
                 yarp::os::BufferedPort<yarp::sig::Vector> skinManagerHandL;
