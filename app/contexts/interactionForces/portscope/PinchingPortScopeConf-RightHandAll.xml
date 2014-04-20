@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<portscope rows="4" columns="4" carrier="mcast">
+<portscope rows="6" columns="10" carrier="mcast">
 <!-- ****************************************************************************************************************** -->
 <!-- ******************************************************************************** -->
 <!-- ** Skin Values                                                                   -->
@@ -304,6 +304,34 @@
                color="#A0E5FF" title="Raw values" size="2" type="lines" />
         <graph remote="/icub/skin/right_hand_comp" index="59"
                color="#FFFFFF" title="Raw values" size="2" type="lines" />
+    </plot>
+<!-- ******************************************************************************** -->
+
+<!-- ******************************************************************************** -->
+<!-- ** Nano17 Values                                                                 -->
+<!-- ** Force		                                                              -->
+    <plot gridx="0" gridy="4" hspan="6" vspan="2"
+          title="Nano17 - Force (X, Y, Z)"
+          size="60" minval="-70" maxval="70"
+          bgcolor="LightSlateGrey">
+        <graph remote="/NIDAQmxReader/data/real:o" index="0"
+               color="#0000FF" title="Raw values" size="2" type="lines" />
+        <graph remote="/NIDAQmxReader/data/real:o" index="1"
+               color="#FF0000" title="Raw values" size="2" type="lines" />
+        <graph remote="/NIDAQmxReader/data/real:o" index="2"
+               color="#FF6E00" title="Raw values" size="2" type="lines" />
+    </plot>
+
+    <plot gridx="6" gridy="4" hspan="4" vspan="2"
+          title="Nano17 - Torque (X, Y, Z)"
+          size="60" minval="-70" maxval="70"
+          bgcolor="LightSlateGrey">
+        <graph remote="/NIDAQmxReader/data/real:o" index="3"
+               color="#0000FF" title="Raw values" size="2" type="lines" />
+        <graph remote="/NIDAQmxReader/data/real:o" index="4"
+               color="#FF0000" title="Raw values" size="2" type="lines" />
+        <graph remote="/NIDAQmxReader/data/real:o" index="5"
+               color="#FF6E00" title="Raw values" size="2" type="lines" />
     </plot>
 <!-- ******************************************************************************** -->
 <!-- ****************************************************************************************************************** -->
