@@ -174,7 +174,12 @@ namespace iCub {
                 /**
                  * The previous pinch depth.
                  */
-                double previousDepth;
+                std::vector<double> previousDepth;
+
+                /** 
+                 * Set to true if the thumb is to be used in the pinching motion. 
+                 */
+                bool useThumb;
 
 
                 /* *******  Threads                                 ******* */
@@ -214,6 +219,7 @@ namespace iCub {
                  */
                 bool reachArm(void);
                 bool waitMoveDone(const double &i_timeout, const double &i_delay);
+                void checkUseThumb(const bool increment, yarp::sig::Vector &o_positions);
                 
                 bool connectDataDumper(void);
                 bool disconnectDataDumper(void);
@@ -224,7 +230,6 @@ namespace iCub {
                 virtual bool pinchseq(void);
                 virtual bool resetC(void);
                 virtual bool quit(void);
-
         };
     }
 }

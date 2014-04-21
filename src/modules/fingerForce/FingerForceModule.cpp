@@ -155,12 +155,14 @@ bool FingerForceModule::configure(ResourceFinder &rf) {
         pinchDuration = parGroup.check("pinchDuration", 5, "Duration of a single pinch.").asInt();
         pinchDelay = parGroup.check("pinchDelay", 5, "Delay between pinches.").asInt();
         progressiveDepth = parGroup.check("progressiveDepth", false, "Set to true to progressively increase pinching depth.").asBool();
+        useThumb = parGroup.check("useThumb", false, "Set to true to use the thumb when pinching.").asBool();
     } else {
         nPinches = 10;
         pinchIncrement = 1;
         pinchDuration = 5;
         pinchDelay = 5;
         progressiveDepth = false;
+        useThumb = false;
     }
 
 #ifndef NODEBUG
@@ -186,7 +188,11 @@ bool FingerForceModule::configure(ResourceFinder &rf) {
         finger.startPos = 0;
         finger.pinchPos = 20;
     }
-    previousDepth = finger.startPos;
+
+    // Initialise previous depth
+    previousDepth.resize(2, 0.0);
+    previousDepth[0] = homePos[9];
+    previousDepth[1] = finger.startPos;
 
 #ifndef NODEBUG
     cout << "DEBUG: " << dbgTag << "Pinching parameters are: \n";
@@ -393,7 +399,8 @@ bool FingerForceModule::pinch(void) {
 
 #if !defined(NODEBUG) || (FINGER_FORCE_DEBUG)
     cout << "DEBUG: " << dbgTag << "Starting limb position: " << position[finger.joint] << ", "
-        << "Previous depth: " << previousDepth << "\n";
+        << "Previous depth: ";
+    cout << "Thumb (" << previousDepth[0] << "\t Finger: " << previousDepth[1] << "\n";
 #endif
 
     // Check for progressive pinching depth
@@ -403,21 +410,24 @@ bool FingerForceModule::pinch(void) {
 #endif
         if ((pinchCounter >= 0) && (pinchCounter < nPinches/2)) {
             // First half of pinching sequence 
-            position[finger.joint] = previousDepth + pinchIncrement;      // Increment depth wrt previous depth
-            previousDepth = position[finger.joint];        // Store previous depth
+            position[finger.joint] = previousDepth[1] + pinchIncrement;    // Increment depth wrt previous depth
+            previousDepth[1] = position[finger.joint];                  // Store previous depth
+            checkUseThumb(true, position);
         } else if (pinchCounter == nPinches/2) {
             // Midpoint of sequence
-            position[finger.joint] = previousDepth;
+            position[finger.joint] = previousDepth[1];
         } else if ((pinchCounter >= nPinches/2) && (pinchCounter < nPinches)) {
             // Second half of pinching sequence
-            position[finger.joint] = previousDepth - pinchIncrement;      // Decrement depth wrt previous depth
-            previousDepth = position[finger.joint];        // Store previous depth
+            position[finger.joint] = previousDepth[1] - pinchIncrement;    // Decrement depth wrt previous depth
+            previousDepth[1] = position[finger.joint];                  // Store previous depth
+            checkUseThumb(true, position);
         }
 
         pinchCounter++;       // Increment pinchcounter
     } else {
         position[finger.joint] = finger.startPos + pinchIncrement;      // Increment depth wrt previous depth
     }
+
     
     cout << dbgTag << "Pinching depth is: " << position[finger.joint] << "\n";
 
@@ -525,6 +535,24 @@ bool FingerForceModule::waitMoveDone(const double &i_timeout, const double &i_de
 #endif
 
     return ok;
+}
+/* *********************************************************************************************************************** */
+
+
+/* *********************************************************************************************************************** */
+/* ******* Check if the thumb is to be used for the pinching motion.        ********************************************** */
+void FingerForceModule::checkUseThumb(const bool increment, yarp::sig::Vector &o_positions) {
+    // Check for thumb
+    if (useThumb) {
+        if (increment) {
+            o_positions[9] = previousDepth[0] + pinchIncrement;
+        } else {
+            o_positions[9] = previousDepth[0] - pinchIncrement;
+        }
+
+        // Store previous depth
+        previousDepth[0] = o_positions[9];
+    }
 }
 /* *********************************************************************************************************************** */
 
