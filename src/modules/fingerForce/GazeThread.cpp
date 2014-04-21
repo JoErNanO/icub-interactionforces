@@ -70,10 +70,12 @@ bool GazeThread::threadInit() {
     iCart->storeContext(&startup_context_id_cart);
     // print out some info about the controller
     Bottle info;
-    iCart->getInfo(info);
+    if (!iCart->getInfo(info)) {
+        cout << dbgTag << "------------------------------------ \n";
+    }
     stringstream ss;
     ss << "Cartesian controller info = " << info.toString().c_str();
-    cout << ss;
+    cout << dbgTag << ss;
 
     /* ****** Gaze controller stuff                               ****** */
     Property optGaze;
@@ -92,7 +94,7 @@ bool GazeThread::threadInit() {
     iGaze->getInfo(info);
     ss.str(std::string());
     ss << "Gaze controller info = " << info.toString().c_str();
-    cout << ss;
+    cout << dbgTag << ss;
 
     // Store initial gaze
     iGaze->getFixationPoint(startGaze);
