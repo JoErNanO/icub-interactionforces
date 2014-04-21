@@ -74,7 +74,7 @@ bool GazeThread::threadInit() {
         cout << dbgTag << "------------------------------------ \n";
     }
     stringstream ss;
-    ss << "Cartesian controller info = " << info.toString().c_str();
+    ss << "Cartesian controller info = " << info.toString().c_str() << "\n";
     cout << dbgTag << ss;
 
     /* ****** Gaze controller stuff                               ****** */
@@ -93,7 +93,7 @@ bool GazeThread::threadInit() {
     info.clear();
     iGaze->getInfo(info);
     ss.str(std::string());
-    ss << "Gaze controller info = " << info.toString().c_str();
+    ss << "Gaze controller info = " << info.toString().c_str() << "\n";
     cout << dbgTag << ss;
 
     // Store initial gaze
