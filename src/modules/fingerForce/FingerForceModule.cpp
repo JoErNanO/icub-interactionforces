@@ -172,7 +172,8 @@ bool FingerForceModule::configure(ResourceFinder &rf) {
     cout << "DEBUG: " << dbgTag << "\t" << "pinchIncrement " << pinchIncrement << "\n";
     cout << "DEBUG: " << dbgTag << "\t" << "pinchDuration " << pinchDuration << "\n";
     cout << "DEBUG: " << dbgTag << "\t" << "pinchDelay " << pinchDelay << "\n";
-    cout << "DEBUG: " << dbgTag << "\t" << "progressiveDepth " << progressiveDepth << "\n";
+    cout << "DEBUG: " << dbgTag << "\t" << "progressiveDepth "  << std::boolalpha << progressiveDepth << "\n";
+    cout << "DEBUG: " << dbgTag << "\t" << "useThumb " << useThumb << std::noboolalpha << "\n";
     cout << "\n";
 #endif
     
@@ -254,8 +255,6 @@ bool FingerForceModule::configure(ResourceFinder &rf) {
 
     // Put arm in position
     reachArm();
-    // Hand
-    open();
 
 
     /* ******* Start threads.                                       ******* */
@@ -325,17 +324,19 @@ bool FingerForceModule::interruptModule() {
 /* *********************************************************************************************************************** */
 /* ******* Place arm in grasping position                                   ********************************************** */ 
 bool FingerForceModule::reachArm(void) {
-    cout << dbgTag << "Reaching for pinch ... \t";
+    cout << dbgTag << "Reaching for pinch ... \n";
     
     iPos->stop();
 
     // Set the arm in the starting position
     // Arm
     iPos->positionMove(&homePos[0]);
+    // Hand
+    open();
 
     // Check motion done
     waitMoveDone(10, 1);
-    cout << "Done. \n";
+    cout << dbgTag << "Done. \n";
 
     return true;
 }
@@ -400,7 +401,7 @@ bool FingerForceModule::pinch(void) {
 #if !defined(NODEBUG) || (FINGER_FORCE_DEBUG)
     cout << "DEBUG: " << dbgTag << "Starting limb position: " << position[finger.joint] << ", "
         << "Previous depth: ";
-    cout << "Thumb (" << previousDepth[0] << "\t Finger: " << previousDepth[1] << "\n";
+    cout << "Thumb (" << previousDepth[0] << ")\t Finger: (" << previousDepth[1] << ") \n";
 #endif
 
     // Check for progressive pinching depth
@@ -444,7 +445,10 @@ bool FingerForceModule::pinch(void) {
 
     // Raise -- move back to pre-pinching position
     cout << dbgTag << "Raising ...... ";
-    position[finger.joint] = finger.startPos;       // Move finger finger
+    position[finger.joint] = finger.startPos;       // Move finger
+    if (useThumb) {
+        position[9] = homePos[9];
+    }
 
     // Move
     iPos->positionMove(position.data());
@@ -565,8 +569,6 @@ bool FingerForceModule::connectDataDumper(void) {
     // Connect data dumper
     ok &= Network::connect("/" + robotName + "/" + whichArm + "_arm/state:o", "/dump_" + whichArm + "_pos");
     ok &= Network::connect("/NIDAQmxReader/data/real:o", "/dump_" + whichArm + "_nano17");
-    ok &= Network::connect("/" + robotName + "/" + whichArm + "_arm/analog:o", "/dump_" + whichArm + "_ft");
-    ok &= Network::connect("/wholeBodyDynamics/" + whichArm + "_arm/cartesianEndEffectorWrench:o", "/dump_" + whichArm + "_wbd");
     ok &= Network::connect("/" + robotName + "/skin/" + whichArm + "_hand", "/dump_" + whichArm + "_skin_raw");
     ok &= Network::connect("/" + robotName + "/skin/" + whichArm + "_hand_comp", "/dump_" + whichArm + "_skin_comp");
 
@@ -583,8 +585,6 @@ bool FingerForceModule::disconnectDataDumper(void) {
     // Disconnect data dumper
     ok &= Network::disconnect("/" + robotName + "/" + whichArm + "_arm/state:o", "/dump_" + whichArm + "_pos");
     ok &= Network::disconnect("/NIDAQmxReader/data/real:o", "/dump_" + whichArm + "_nano17");
-    ok &= Network::disconnect("/" + robotName + "/" + whichArm + "_arm/analog:o", "/dump_" + whichArm + "_ft");
-    ok &= Network::disconnect("/wholeBodyDynamics/" + whichArm + "_arm/cartesianEndEffectorWrench:o", "/dump_" + whichArm + "_wbd");
     ok &= Network::disconnect("/" + robotName + "/skin/" + whichArm + "_hand", "/dump_" + whichArm + "_skin_raw");
     ok &= Network::disconnect("/" + robotName + "/skin/" + whichArm + "_hand_comp", "/dump_" + whichArm + "_skin_comp");
 
