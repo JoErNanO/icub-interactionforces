@@ -58,12 +58,12 @@ script:
     - make
     - sudo make install
 
-    # Create doxygen documentation
-    - cd $PROJ_ROOT
-    - doxygen conf/Doxyfile
+#    # Create doxygen documentation
+#    - cd $PROJ_ROOT
+#    - doxygen conf/Doxyfile
 
 after_success:
-    # Publish doxygen documentation
-    - cd $PROJ_ROOT
-    - chmod -R 744 .travis
-    - .travis/push-doxygen-to-gh-pages.sh
+#    # Publish doxygen documentation
+#    - cd $PROJ_ROOT
+#    - chmod -R 744 .travis
+#    - .travis/push-doxygen-to-gh-pages.sh
