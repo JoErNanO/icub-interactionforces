@@ -1,0 +1,10 @@
+/**
+ * \brief The iCub InteractionForces is a YARP project containing modules to perform interaction forces experiments using the iCub robot.
+ * \author Francesco Giovannini (francesco.giovannini@iit.it)
+ * \file
+ */
+ 
+/**
+ * \mainpage iCub Interaction Forces Documentation
+ * This is the iCub Interaction Forces project documentation resulting from automatic parsing of doxygen comments in the code.
+ */
